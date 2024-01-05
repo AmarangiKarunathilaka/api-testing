@@ -19,7 +19,7 @@ public class ApiTests {
         String endpoint = "http://localhost:/api_testing/product/read_one.php";
         var response=
                 given().
-                        queryParam("id",2).
+                        queryParam("id",3).
                 when().
                         get(endpoint).
                 then();
@@ -56,6 +56,16 @@ public class ApiTests {
         response.log().body();
     }
 
-    
+    @Test
+    public void deleteProduct(){
+        String endpoint = "http://localhost:/api_testing/product/delete.php";
+        String body = """
+                {
+                "id": 19
+                }""";
+
+        var response = given().body(body).when().delete(endpoint).then();
+        response.log().body();
+    }
 
 }

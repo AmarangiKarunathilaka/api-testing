@@ -4,6 +4,7 @@ import models.Product;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class ApiTests {
@@ -33,8 +34,8 @@ public class ApiTests {
                             body("records.description", everyItem(notNullValue())).
                             body("records.price", everyItem(notNullValue())).
                             body("records.category_id", everyItem(notNullValue())).
-                            body("records.category_name", everyItem(notNullValue()));
-                            //body("records.id[0]", equalTo("25"));
+                            body("records.category_name", everyItem(notNullValue())).
+                            body("records.id[0]", equalTo("20"));
 
     }
 
@@ -113,4 +114,25 @@ public class ApiTests {
         response.log().body();
     }
 
+    @Test
+    public void getDeserializedProduct(){
+
+        String endpoint = "http://localhost:/api_testing/product/read_one.php";
+        Product expectedProduct = new Product(
+                2,
+                "Cross-Back Training Tank",
+                "The most awesome phone of 2013!",
+                299.0,
+                2,
+                "Active Wear - Women"
+        );
+         Product actualProduct =
+                 given().
+                    queryParam("id", "2").
+                 when().
+                    get(endpoint).
+                    as(Product.class);
+
+         assertThat(actualProduct, samePropertyValuesAs(expectedProduct));
+    }
 }

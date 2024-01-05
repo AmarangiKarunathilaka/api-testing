@@ -17,7 +17,10 @@ public class ApiTests {
         String endpoint = "http://localhost:8888/api_testing/category/read_one.php";
         var response=
                 given().
-                        queryParam("id");
+                        queryParam("id",2).
+                when().
+                        get(endpoint).
+                then();
     }
 
 

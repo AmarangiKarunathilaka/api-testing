@@ -4,7 +4,7 @@ import models.Product;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 public class ApiTests {
 
@@ -15,6 +15,28 @@ public class ApiTests {
         var response  = given().when().get(endpoint).then();
     }
 
+    @Test
+    public void getProducts(){
+        String endpoint = "http://localhost:/api_testing/product/read.php";
+        given().
+                when().
+                    get(endpoint).
+                then().
+                    log().
+                        headers().
+                            assertThat().
+                            statusCode(200).
+                            header("Content-Type", equalTo("application/json; charset=UTF-8")).
+                            body("records.size()", greaterThan(0)).
+                            body("records.id", everyItem(notNullValue())).
+                            body("records.name", everyItem(notNullValue())).
+                            body("records.description", everyItem(notNullValue())).
+                            body("records.price", everyItem(notNullValue())).
+                            body("records.category_id", everyItem(notNullValue())).
+                            body("records.category_name", everyItem(notNullValue()));
+                            //body("records.id[0]", equalTo("25"));
+
+    }
 
     @Test
     public void getProduct(){
